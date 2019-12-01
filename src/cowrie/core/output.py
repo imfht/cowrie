@@ -94,7 +94,7 @@ class Output(object):
             '.*SSHTransport,([0-9]+),[0-9a-f:.]+$')
         self.telnetRegex = re.compile(
             '.*TelnetTransport,([0-9]+),[0-9a-f:.]+$')
-        self.sensor = CowrieConfig().get('honeypot', 'sensor_name', fallback=socket.gethostname())
+        self.sensor = CowrieConfig().get('honeypot', 'sensor_name', fallback=self._get_sensor_name())
 
         # use Z for UTC (Zulu) time, it's shorter.
         if 'TZ' in environ and environ['TZ'] == 'UTC':
@@ -103,6 +103,24 @@ class Output(object):
             self.timeFormat = '%Y-%m-%dT%H:%M:%S.%f%z'
 
         self.start()
+
+    def _get_sensor_name(self):
+        """
+        patch by jinxufang.
+        return public ip address of the sensor.
+        @return: str
+        """
+        IPS_URI = ["https://api.ipify.org/", "https://api.ip.sb/ip", "https://ifconfig.me"]
+        import urllib.request
+        import ipaddress
+        for url in IPS_URI:
+            try:
+                response = urllib.request.urlopen(url)
+                html = response.read().decode('utf-8')
+                return str(ipaddress.IPv4Address(html))
+            except Exception:
+                continue
+        return socket.gethostname()
 
     def logDispatch(self, *msg, **kw):
         """
