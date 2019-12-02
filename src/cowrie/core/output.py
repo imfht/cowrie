@@ -113,12 +113,16 @@ class Output(object):
         IPS_URI = ["https://api.ipify.org/", "https://api.ip.sb/ip", "https://ifconfig.me"]
         import urllib.request
         import ipaddress
+
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
         for url in IPS_URI:
             try:
                 response = urllib.request.urlopen(url)
                 html = response.read().decode('utf-8')
                 return str(ipaddress.IPv4Address(html))
-            except Exception:
+            except Exception as e:
+                print(e)
                 continue
         return socket.gethostname()
 
