@@ -14,12 +14,12 @@ class Output(cowrie.core.output.Output):
     """
 
     def start(self):
-        self.host = CowrieConfig().get('output_elasticsearch', 'host')
-        self.port = CowrieConfig().get('output_elasticsearch', 'port')
+        self.endpoint = CowrieConfig().get('output_elasticsearch', 'endpoint')
         self.index = CowrieConfig().get('output_elasticsearch', 'index')
         self.type = CowrieConfig().get('output_elasticsearch', 'type')
         self.pipeline = CowrieConfig().get('output_elasticsearch', 'pipeline')
-        self.es = Elasticsearch('{0}:{1}'.format(self.host, self.port))
+        #self.es = Elasticsearch(["https://like:you@es.1db.tech:443/"])
+        self.es = Elasticsearch([self.endpoint,])
 
     def stop(self):
         pass
