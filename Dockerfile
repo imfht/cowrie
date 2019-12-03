@@ -34,6 +34,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
       build-essential \
       python3-virtualenv \
       libsnappy-dev \
+      libssl-dev \
       default-libmysqlclient-dev && \
     rm -rf /var/lib/apt/lists/*
 
